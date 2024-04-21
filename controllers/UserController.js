@@ -7,8 +7,8 @@ const Database = require('../error/DataBaseError')
 const cookieOptions = {
     maxAge: 1 * 365 * 24 * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: 'none',
-    secure,
+    secure: true,
+    sameSite: 'strict',
 }
 
 class UserControllers{ 
