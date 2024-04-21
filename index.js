@@ -6,7 +6,8 @@ const PORT = process.env.PORT_SERVER || 5000;
 const router = require('./router/index')
 const error = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
-const cors = require('cors')
+const cors = require('cors') 
+
 
 app.use(cors({
     credentials: true,
