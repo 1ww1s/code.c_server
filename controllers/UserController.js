@@ -8,6 +8,7 @@ const cookieOptions = {
     maxAge: 1 * 365 * 24 * 60 * 60 * 1000,
     sameSite: 'strict',
     httpOnly: true,
+    domain: 'code-c.ru'
 }
 
 class UserControllers{ 
