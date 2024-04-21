@@ -1,4 +1,4 @@
-module.exports = class Database extends Error{
+module.exports = class DataBase extends Error{
     constructor(status, message){
         super()
         this.message = message
@@ -6,10 +6,9 @@ module.exports = class Database extends Error{
     }
 
     static NotFound(message){
-        return new Database(404, message)
+        return new DataBase(404, message)
     }
     static Conflict(message){
-        return new Database(409, message)
+        return new DataBase(409, message)
     }
 }
-
