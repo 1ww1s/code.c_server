@@ -50,6 +50,7 @@ class UserService{
     }
 
     async logout(refreshToken){
+        if(!refreshToken) return
         await tokenService.removeToken(refreshToken)
     }
     
