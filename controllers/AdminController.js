@@ -19,7 +19,7 @@ class AdminControllers {
             }
             const article = await adminService.createArticle(title, section, fragments)
             
-            res.json({message: `Статья ${article.title} добавлена`})
+            res.json({message: `Статья "${article.title}" добавлена`})
         }
         catch(e){
             next(e)
@@ -36,7 +36,7 @@ class AdminControllers {
                 return next(RequestError.BadRequest('Одно из полей превышает допустимое количество символов'))
             }
             const article = await adminService.updateArticle(title, section, fragments)
-            res.json({message: `Статья успешно изменена`})
+            res.json({message: `Статья "${title}" успешно изменена`})
         }
         catch(e){
             next(e)
@@ -69,7 +69,7 @@ class AdminControllers {
             const {name, value} = req.body;
             if(name.length === 0 || value.length === 0) return next(RequestError.BadRequest('Поля не могут быть пустыми'))
             const section = await adminService.createSection(name, value)
-            res.json({message: "Раздел добавлен"})
+            res.json({message: `Раздел "${name}" добавлен`})
         }
         catch(e){
             next(e)
@@ -81,7 +81,7 @@ class AdminControllers {
             const {value} = req.body;
             if(value.length === 0) return next(RequestError.BadRequest('Поля не могут быть пустыми'))
             const role = await adminService.createRole(value)
-            res.json({message: "Роль добавлена"})
+            res.json({message: `Роль "${value}" добавлена`})
         }
         catch(e){
             next(e)
@@ -126,7 +126,7 @@ class AdminControllers {
             const {user} = req.body;
             if(!user) return next(RequestError.BadRequest('Не указан пользователь'))
             await adminService.updateUserRole(user)
-            res.json({message: `Роли для пользователя ${user.email} изменены`})
+            res.json({message: `Роли для пользователя "${user.email}" изменены`})
         }
         catch(e){
             next(e)
@@ -169,7 +169,7 @@ class AdminControllers {
         try {
             const {title} = req.body;
             const article = await adminService.removeArticle(title)
-            res.json({message: `Статья ${article.title} удалена`})
+            res.json({message: `Статья "${article.title}" удалена`})
         }
         catch(e){
             next(e)

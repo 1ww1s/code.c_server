@@ -70,6 +70,9 @@ class UserControllers{
     async updateUserpic(req, res, next){
         try {
             const {data} = req.body;
+            const sizeBytes = parseInt((data).replace(/=/g,"").length * 0.75);
+            const sizeMB  = sizeBytes / 1e6;
+            if(sizeMB > 2) throw RequestError.BadRequest('*Максимальный размер изображения 2МБ')
             const user = req.user;
             const userData = await userService.get(user.email)
             if(!userData) throw Database.NotFound('Пользователь не найден')
@@ -130,10 +133,34 @@ class UserControllers{
 
     async checkAuth(req, res, next){
         try{
-            if(!req.user.email) throw RequestError.BadRequest('Нет email')
+            if(!req.user.email) throw RequestError.BadRequest('Не указан email')
             const user = await userService.checkAuth(req.user.email)
             return res.json(user)
         }
+        catch(e){
+            next(e)
+        }
+    }
+
+    async reminder(req, res, next){
+        try{
+            const {email} = req.body;
+            if(!email) throw RequestError.BadRequest('Не указан email')
+            await userService.reminder(email)
+            res.json({message:"Ссылка для восстановления пароля успешно отправлена на ваш email"})
+        }   
+        catch(e){
+            next(e)
+        }
+    }
+
+    async recover(req, res, next){
+        try{
+            const {link, password: newPassword} = req.body;
+            if(!link || !newPassword) throw RequestError.BadRequest('Одно из полей пустое')
+            await userService.recover(link, newPassword)
+            res.json({message:"Пароль успешно изменен"})
+        }   
         catch(e){
             next(e)
         }

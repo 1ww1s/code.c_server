@@ -17,7 +17,9 @@ authRouter.post('/login',
 authRouter.get('/logout', userController.logout)
 authRouter.get('/activate/:link', userController.activate)
 authRouter.get('/refresh', userController.refresh)
-authRouter.get('/logout', AuthMiddleware,userController.logout)
+authRouter.get('/logout', AuthMiddleware, userController.logout)
 authRouter.get('/check',  AuthMiddleware, userController.checkAuth)
+authRouter.post('/reminder', userController.reminder)
+authRouter.post('/recover', userController.recover)
 
 module.exports = authRouter

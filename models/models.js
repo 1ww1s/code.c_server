@@ -50,7 +50,14 @@ const Section = sequelize.define('section', {
 })
 
 
+const RecoverLink = sequelize.define('recoverLink', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    link: {type: DataTypes.STRING, unique: true},
+})
 
+
+User.hasOne(RecoverLink)
+RecoverLink.belongsTo(User)
 
 User.hasMany(RefreshToken)
 RefreshToken.belongsTo(User)
@@ -71,5 +78,6 @@ module.exports = {
     Article,
     Fragment,
     Section,
-    UserSelectedArticle
+    UserSelectedArticle,
+    RecoverLink
 }

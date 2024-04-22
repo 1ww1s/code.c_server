@@ -3,6 +3,7 @@ const AuthError = require('../error/AuthError');
 const bcrypr = require('bcrypt');
 const tokenService = require('./tokenService');
 const articleService = require('./articleService');
+const recoverLinkService = require('./RecoverLinkService');
 const UserAccessDto = require("../dtos/userAccessDto");
 const UserRefreshDto = require("../dtos/userRefreshDto");
 const UserDto = require("../dtos/userDto");
@@ -11,6 +12,7 @@ const mailService = require('../service/mailService')
 const { Op } = require('sequelize');
 const Database = require("../error/DataBaseError");
 const sectionService = require("./sectionService");
+const RequestError = require("../error/RequestError");
 
 class UserService{
 
@@ -55,18 +57,40 @@ class UserService{
     }
     
     async sendActivation(email){
-        const userData = await User.findOne({where:{email}})
-        if(!userData) throw RequestError.NotFound('Пользователь не найден')
+        const userData = await User.findOne({where: {email}})
+        if(!userData) throw Database.NotFound('Пользователь не найден')
         await mailService.sendActivationMail(userData.email, `${process.env.SERVER_URL}/api/user/auth/activate/${userData.activationLink}`)
     }
 
     async activate(link){
-        const user = await User.findOne({where: {activationLink: link}})
-        if(!user) {
+        const userData = await User.findOne({where: {activationLink: link}})
+        if(!userData) {
             throw AuthError.BadRequest('Неверная ссылка активации')
         }
-        user.isActivated = true
-        return user.save()
+        userData.isActivated = true
+        return userData.save()
+    }
+    
+    async reminder(email){
+        const userData = await User.findOne({where: {email}})
+        if(!userData) throw Database.NotFound('Пользователь не найден')
+        const reminderLink = uuid.v4()
+        await recoverLinkService.setLink(userData.id, reminderLink)
+        await mailService.sendReminder(email, `${process.env.CLIENT_URL}/login/recover/${reminderLink}`)
+    }
+
+    async recover(link, newPassword){
+        const recoverLinkData = await recoverLinkService.getLink(link)
+        if(!recoverLinkData) throw Database.NotFound('Неправильная ссылка, убедитесь, что перешли по актуальной ссылке из письма на своем email')
+        const userData = await User.findOne({where:{id:recoverLinkData.userId}})
+        if(!userData) throw Database.NotFound('По данной ссылке пользователя не сущестует')
+        const isPassEquals = bcrypr.compareSync(newPassword, userData.password)
+        if(isPassEquals) {
+            throw RequestError.BadRequest(`Новый пароль совпадает со старым`)        
+        }  
+        const hashPassword = bcrypr.hashSync(newPassword, 5)
+        userData.password = hashPassword;
+        await userData.save()
     }
 
     async checkAuth(email){
