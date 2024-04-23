@@ -74,6 +74,7 @@ class UserControllers{
             const sizeMB  = sizeBytes / 1e6;
             if(sizeMB > 2) throw RequestError.BadRequest('*Максимальный размер изображения 2МБ')
             const user = req.user;
+            await new Promise((resolve) =>  setTimeout(resolve, 5000))
             const userData = await userService.get(user.email)
             if(!userData) throw Database.NotFound('Пользователь не найден')
             await userService.update({userpic: data}, userData.id)

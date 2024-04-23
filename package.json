@@ -12,6 +12,7 @@
     "nodemon": "^3.1.0",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
+    "sanitize-html": "^2.13.0",
     "sequelize": "^6.37.1",
     "speakeasy": "^2.0.0",
     "uuid": "^9.0.1"

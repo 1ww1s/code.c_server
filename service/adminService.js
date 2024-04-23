@@ -3,21 +3,31 @@ const articleService = require('./articleService')
 const fragmentService = require('./fragmentService')
 const roleService = require('./roleService')
 const userService = require('./userService')
+const sanitizeHtmlService = require('./sanitizeHtmlService')
 const Database = require("../error/DataBaseError")
 const RequestError = require('../error/RequestError')
 
+
 class AdminService{
     async createArticle(title, value, fragments){
-        const section = await sectionService.getSection(value)
-        if(!section) throw RequestError.NotFound('Такого раздела нет')
-        const countArticles = await articleService.getCount(section.id)
-        const article = await articleService.create(title, section.id, countArticles)
-        await Promise.all(fragments.map(async (fragment, index) => {
-            if(fragment._text.length > 1e8)  throw RequestError.BadRequest('Одно из полей превышает допустимое количество символов')
-            if(fragment._text.length === 0 && fragment._title === 0)  throw RequestError.BadRequest('Фрагмент не может быть пустым')
-            await fragmentService.create(fragment._title, fragment._type, fragment._text, JSON.stringify(fragment._style), index, article.id)
-        }))
-        return article
+        try{
+            const section = await sectionService.getSection(value)
+            if(!section) throw RequestError.NotFound('Такого раздела нет')
+            const countArticles = await articleService.getCount(section.id)
+            const article = await articleService.create(title, section.id, countArticles)
+            await Promise.all(fragments.map(async (fragment, index) => {
+                if(fragment._text.length > 1e8)  throw RequestError.BadRequest('Одно из полей превышает допустимое количество символов')
+                if(fragment._text.length === 0 && fragment._title === 0)  throw RequestError.BadRequest('Фрагмент не может быть пустым')
+                const cleanHtml = sanitizeHtmlService.getCleanHtml(fragment._text)
+                await fragmentService.create(fragment._title, fragment._type, cleanHtml, JSON.stringify(fragment._style), index, article.id)
+            }))
+            return article
+        }
+        catch(e){
+            console.log(e)
+            throw e
+        }
+        
     }
 
     async updateArticle(title, value, newFragments){                              

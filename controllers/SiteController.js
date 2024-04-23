@@ -15,7 +15,7 @@ class SiteControllers {
 
     async getTitlesArticlesBySection(req, res, next){
         try {
-            const {section} = req.params;
+            const {section} = req.params; 
             const articles = await siteService.getTitlesArticlesBySection(section)
             res.json(articles)
         }   
@@ -38,7 +38,7 @@ class SiteControllers {
     async getArticle(req, res, next){
         try{
             const { title } = req.body;
-            if(!title) return next(CreateError.BadRequest('Нет названия статьи'))            
+            if(!title) return next(CreateError.BadRequest('Нет названия статьи'))     
             const article = await siteService.getArticle(title)
             res.json(article)
         }
