@@ -59,7 +59,7 @@ class UserService{
     async sendActivation(email){
         const userData = await User.findOne({where: {email}})
         if(!userData) throw Database.NotFound('Пользователь не найден')
-        await mailService.sendActivationMail(userData.email, `${process.env.SERVER_URL}/api/user/auth/activate/${userData.activationLink}`)
+        await mailService.sendActivationMail(userData.email, `${process.env.CLIENT_URL}/api/user/auth/activate/${userData.activationLink}`)
     }
 
     async activate(link){
