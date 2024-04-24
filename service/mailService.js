@@ -29,30 +29,35 @@ class MailService {
 
                         ">
                             <h1>Для активации аккаунта нажмите на кнопку</h1>
-                            <button style="
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                border-radius: 8px 8px / 50% 50%;
-                                padding: 20px;
-                                width: 220px;
-                                height: 50px;
-                                font-family: 'Montserrat Semibold';
-                                color: white;
-                                background-color: #4A68FF;
-                                border: 0;
-                                outline: 0;
-                                cursor: pointer
-                            
-                            "><a style = "
-                                font-family: 'Montserrat Medium';
-                                display: inline;
-                                color: white;
-                                position: relative;
-                                text-decoration: none;
-                                font-size: 15px;
-                            "
-                            href="${link}">Активировать</a></button>
+                            <a style = "
+                                    font-family: 'Montserrat Medium';
+                                    display: inline;
+                                    color: white;
+                                    position: relative;
+                                    text-decoration: none;
+                                    font-size: 15px;
+                                    width: 220px;
+                                    height: 50px;
+                                "
+                                href="${link}"
+                            >
+                                <button style="
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    border-radius: 8px 8px / 50% 50%;
+                                    padding: 20px;
+                                    width: 220px;
+                                    height: 50px;
+                                    color: white;
+                                    background-color: #4A68FF;
+                                    border: 0;
+                                    outline: 0;
+                                    cursor: pointer"
+                                >
+                                    Активировать
+                                </button>
+                            </a>
                         </div>
                     `
             })
