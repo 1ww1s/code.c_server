@@ -20,6 +20,10 @@ class RecoverLinkService{
         const recoverLink = await RecoverLink.findOne({where:{link}})
         return recoverLink
     }
+
+    async deleteLink(link){
+        await RecoverLink.destroy({where:{link}})
+    }
 }
 
 

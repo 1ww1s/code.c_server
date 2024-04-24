@@ -6,6 +6,7 @@ const userService = require('./userService')
 const sanitizeHtmlService = require('./sanitizeHtmlService')
 const Database = require("../error/DataBaseError")
 const RequestError = require('../error/RequestError')
+const UserDto = require("../dtos/userDto")
 
 
 class AdminService{
@@ -88,7 +89,7 @@ class AdminService{
 
     async getRole(){
         const roles = await roleService.getAll()
-        return roles.map(role => role.value)
+        return roles.filter(role => (role.value !== 'admin') && (role.value !== 'user')).map(role => role.value)
     }
 
     async getSectionsExceptHome(){
@@ -126,9 +127,12 @@ class AdminService{
         if(!user.email) RequestError.BadRequest('Не указан email')
         const usersData = await userService.get(user.email)
         if(!usersData)  throw Database.NotFound('Такого пользователя нет')
-        const roleData = (await roleService.getAll()).map(role => role.value)
-        if(user.roles.map(role => {if(!roleData.includes(role)) throw RequestError.BadRequest('Одна из ролей не существует')}))
-        await userService.update({role: user.roles}, usersData.id)
+        user.roles = user.roles.filter(role => (role !== 'user') && (role !== 'admin'))   
+        let roleData = (await roleService.getAll()).filter(role => (role.value !== 'admin') && (role.value !== "user")).map(role => role.value)
+        user.roles.map(role => { if(!roleData.includes(role)) throw RequestError.BadRequest('Одна из ролей не существует') })   
+        let newRoles = usersData.role.filter(role => (role === 'user') || (role === 'admin'))   
+        newRoles.push(...user.roles)
+        await userService.update({role: newRoles}, usersData.id)
     }
 
     async getTitlesArticlesBySection(sectionId){

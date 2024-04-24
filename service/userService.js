@@ -84,6 +84,7 @@ class UserService{
         if(!recoverLinkData) throw Database.NotFound('Неправильная ссылка, убедитесь, что перешли по актуальной ссылке из письма на своем email')
         const userData = await User.findOne({where:{id:recoverLinkData.userId}})
         if(!userData) throw Database.NotFound('По данной ссылке пользователя не сущестует')
+        await recoverLinkService.deleteLink(link)
         const isPassEquals = bcrypr.compareSync(newPassword, userData.password)
         if(isPassEquals) {
             throw RequestError.BadRequest(`Новый пароль совпадает со старым`)        
@@ -118,24 +119,19 @@ class UserService{
     }
 
     async get(email){
-        try{
-            let user = await User.findOne({where:{email}, include: Article})
-            if(!user) return null
-            const articles = user.articles?.map(async article => {
-                const section = await sectionService.getSection(null, article.sectionId)
-                if(section){
-                    return {
-                        title: article.title,
-                        section: section.value
-                    }
+        let user = await User.findOne({where:{email}, include: Article})
+        if(!user) return null
+        const articles = user.articles?.map(async article => {
+            const section = await sectionService.getSection(null, article.sectionId)
+            if(section){
+                return {
+                    title: article.title,
+                    section: section.value
                 }
-            })
-            user.articles = await Promise.all(articles) 
-            return user
-        }
-        catch(e){
-            console.log(444, e)
-        }
+            }
+        })
+        user.articles = await Promise.all(articles) 
+        return user
     }
 
     async addSelectedArticle(email, title){
