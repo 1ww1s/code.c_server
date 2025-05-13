@@ -170,6 +170,7 @@ class UserControllers{
     async refresh(req, res, next){
         try {
             const token = req.cookies.token
+            if(!token)  throw AuthError.UnauthorizedError()
             const userData = await userService.refresh(token)
             res.cookie('token', userData.refreshToken, cookieOptions)
             return res.json({user: userData.user, accessToken: userData.accessToken})

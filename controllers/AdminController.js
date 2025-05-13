@@ -101,7 +101,6 @@ class AdminControllers {
     async getSectionsExceptHome(_, res, next){
         try {
             const sections = await adminService.getSectionsExceptHome()
-            console.log(sections)
             res.json(sections)
         }
         catch(e){

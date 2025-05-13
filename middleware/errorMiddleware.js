@@ -14,6 +14,6 @@ module.exports = function(err, req, res, next){
         console.log(err.message)
         return res.status(err.status).json({message: err.message})
     }
-    console.log(e)
+    console.log(err)
     return res.status(500).json({message: 'Непредвиденная ошибка'})
 }

@@ -28,7 +28,6 @@ class TokenService {
     }
 
     async getUser(token){
-        
         const user = await RefreshToken.findOne({where: {token}})
         return user
     }

@@ -27,7 +27,6 @@ class SiteControllers {
     async getArticlesLast(_, res, next){
         try{
             const articles = await siteService.getArticlesLast()
-            console.log(articles)
             res.json(articles)
         }   
         catch(e){
@@ -50,7 +49,6 @@ class SiteControllers {
     async getSections(_, res, next){
         try {
             const sections = await siteService.getSections()
-            console.log(sections)
             res.json(sections)
         }
         catch(e){

@@ -26,7 +26,6 @@ class UserService{
     }
 
     async registration(email, password){
-        
         const candidate = await this.get(email)
         if(candidate){
             throw AuthError.UnprocessableEntity(`Пользователь ${email} уже зарегистрирован`)         

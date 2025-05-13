@@ -8,7 +8,6 @@ const error = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
 const cors = require('cors') 
 
-
 app.use(cors({
     credentials: true,
     maxAge: 24 * 60 * 60,  // 24h
